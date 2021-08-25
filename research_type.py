@@ -88,3 +88,8 @@ def scale_module(df, targetName):
     max_score_robust = algorithm_module(df_robust_scaled_train, df_robust_scaled_test, y_train, y_test)
     print("\n------------------------- Using standard scaled dataset -------------------------")
     max_score_standard = algorithm_module(df_standard_scaled_train, df_standard_scaled_test, y_train, y_test)
+    
+    # Result
+    max_score_result = max(max_score_maxAbs, max_score_minMax, max_score_robust, max_score_standard)
+    print("\n\n============================== Result ==============================")
+    print("Final maximum score: %.6f" % max_score_result)
