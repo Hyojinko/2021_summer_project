@@ -1,5 +1,5 @@
 # 2021_summer_project
-Timeline
+#Timeline
 데이터분석(8/24)
 Preprocessing(8/31)
 판매량 상위 품목 선정, 수요 패턴 분류, Arima model을 사용한 시즌별 수요 패턴 예측(9/14)
