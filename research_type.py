@@ -23,21 +23,23 @@ print(df.dtypes)
 df.dropna(axis=0, inplace=True)
 df.reset_index(drop=True)
 
+def ordinalEncode_category(df,str):
+    ordinalEncoder = preprocessing.OrdinalEncoder()
+    X = pd.DataFrame(df[str])
+    ordinalEncoder.fit(X)
+    df[str] = pd.DataFrame(ordinalEncoder.transform(X))
 
-ordinalEncoder = preprocessing.OrdinalEncoder()
-X = pd.DataFrame(df['Product_Code'])
-ordinalEncoder.fit(X)
-df['Product_Code'] = pd.DataFrame(ordinalEncoder.transform(X))
+def labelEncode_category(df,str):
+    labelEncoder = preprocessing.LabelEncoder()
+    labelEncoder.fit(df[str])
+    df[str] = labelEncoder.transform(df[str])
 
-ordinalEncoder = preprocessing.OrdinalEncoder()
-X = pd.DataFrame(df['Warehouse'])
-ordinalEncoder.fit(X)
-df['Warehouse'] = pd.DataFrame(ordinalEncoder.transform(X))
+def oneHotEncode_category(df,str):
+    enc = preprocessing.OneHotEncoder()
+    enc.fit(df[str])
+    df[str] = enc.transform(df[str])
 
-ordinalEncoder = preprocessing.OrdinalEncoder()
-X = pd.DataFrame(df['Product_Category'])
-ordinalEncoder.fit(X)
-df['Product_Category'] = pd.DataFrame(ordinalEncoder.transform(X))
+
 print(df.head(50))
 
 #Since the "()" has been removed , Now i Will change the data type.
