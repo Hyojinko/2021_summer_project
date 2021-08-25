@@ -7,7 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.datasets import fetch_openml
 import seaborn as sn
 from sklearn.preprocessing import StandardScaler
-from sklearn.decomposition import PCA
+
 from scipy.stats import norm, skew #Import Norm and skew for some statistics
 from scipy import stats #Import stats
 import statsmodels.api as sm #for decomposing the trends, seasonality etc.
@@ -39,6 +39,17 @@ def oneHotEncode_category(df,str):
     enc.fit(df[str])
     df[str] = enc.transform(df[str])
 
+labelEncode_category(df,"Product_Code")
+labelEncode_category(df,"Warehouse")
+labelEncode_category(df,"Product_Category")
+
+# oneHotEncode_category(df,"Product_Code")
+# oneHotEncode_category(df,"Warehouse")
+# oneHotEncode_category(df,"Product_Category")
+# 
+# ordinalEncode_category(df,"Product_Code")
+# ordinalEncode_category(df,"Warehouse")
+# ordinalEncode_category(df,"Product_Category")
 
 print(df.head(50))
 
@@ -88,8 +99,3 @@ def scale_module(df, targetName):
     max_score_robust = algorithm_module(df_robust_scaled_train, df_robust_scaled_test, y_train, y_test)
     print("\n------------------------- Using standard scaled dataset -------------------------")
     max_score_standard = algorithm_module(df_standard_scaled_train, df_standard_scaled_test, y_train, y_test)
-    
-    # Result
-    max_score_result = max(max_score_maxAbs, max_score_minMax, max_score_robust, max_score_standard)
-    print("\n\n============================== Result ==============================")
-    print("Final maximum score: %.6f" % max_score_result)
