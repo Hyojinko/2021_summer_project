@@ -32,41 +32,13 @@ def ordinalEncode_category(df, str):
     df[str] = pd.DataFrame(ordinalEncoder.transform(X))
 
 
-def labelEncode_category(df, str):
-    labelEncoder = preprocessing.LabelEncoder()
-    labelEncoder.fit(df[str])
-    df[str] = labelEncoder.transform(df[str])
-
-
-def oneHotEncode_category(df, str):
-    enc = preprocessing.OneHotEncoder()
-    encodedData = enc.fit_transform(df[[str]])
-    encodedDataRecovery = np.argmax(encodedData, axis=1).reshape(-1, 1)
-    df[str] = encodedDataRecovery
-
-
 df_ordinal = df.copy()
-df_oneHot = df.copy()
-df_label = df.copy()
 
-labelEncode_category(df_label, "Product_Code")
-labelEncode_category(df_label, "Warehouse")
-labelEncode_category(df_label, "Product_Category")
-labelEncode_category(df_label, "Date")
-
-oneHotEncode_category(df_oneHot, "Product_Code")
-oneHotEncode_category(df_oneHot, "Warehouse")
-oneHotEncode_category(df_oneHot, "Product_Category")
-oneHotEncode_category(df_oneHot, "Date")
 
 ordinalEncode_category(df_ordinal, "Product_Code")
 ordinalEncode_category(df_ordinal, "Warehouse")
 ordinalEncode_category(df_ordinal, "Product_Category")
 ordinalEncode_category(df_ordinal, "Date")
-
-print(df_ordinal.head(5))
-print(df_oneHot.head(5))
-print(df_label.head(5))
 
 # Since the "()" has been removed , Now i Will change the data type.
 df['Order_Demand'] = df['Order_Demand'].str.replace('(', "", regex=True)
