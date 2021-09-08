@@ -103,7 +103,7 @@ def demand_pattern(df):
     return a
 
 #categorizing products based on their forcastability
-adi_cv['category']=adi_cv.apply(category,axis=1)
+adi_cv['category']=adi_cv.apply(demand_pattern,axis=1)
 
 #categorized list
 print(adi_cv.head())
