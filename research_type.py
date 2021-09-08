@@ -68,3 +68,34 @@ print(cv_data.head(10))
 
 
 
+
+
+
+
+
+
+
+#Cross validation
+adi_cv=pd.merge(ADI,cv_data)
+print(adi_cv.head(10))
+
+#defining a function for categorization
+def demand_pattern(df):
+    a=0
+
+    if((df['ADI']<=1.34) & (df['cv_sqr']<=0.49)):
+        a = 'Smooth'
+    if((df['ADI']>=1.34) & (df['cv_sqr']>=0.49)):
+        a = 'Lumpy'
+    if((df['ADI']<1.34) & (df['cv_sqr']>0.49)):
+        a = 'Erratic'
+    if((df['ADI']>1.34) & (df['cv_sqr']<0.49)):
+        a = 'Intermittent'
+    return a
+
+#categorizing products based on their forcastability
+adi_cv['category']=adi_cv.apply(category,axis=1)
+
+#categorized list
+print(adi_cv.head())
+
