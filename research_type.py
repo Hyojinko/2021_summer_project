@@ -37,8 +37,6 @@ def ordinalEncode_category(df, str):
 
 ordinalEncode_category(df, "Product_Code")
 ordinalEncode_category(df, "Warehouse")
-ordinalEncode_category(df, "Product_Category")
-ordinalEncode_category(df, "Date")
 
 # Since the "()" has been removed , Now i Will change the data type.
 df['Order_Demand'] = df['Order_Demand'].str.replace('(', "", regex=True)
@@ -67,12 +65,23 @@ cv_data['cv_sqr']=(cv_data['sd']/cv_data['average'])**2
 print(cv_data.head(10))
 
 
+df['Date'] = df['Date'].astype('datetime64[ns]')
 
+prod_by_date=df.groupby(['Product_Code','Date']).agg(count=('Product_Code','count')).reset_index()
+skus=prod_by_date.Product_Code.value_counts()
+print(skus)
+new_df= pd.DataFrame()
+for i in range(len(skus.index)):
+    a= prod_by_date[prod_by_date['Product_Code']==skus.index[i]]
+    a['previous_date']=a['Date'].shift(1)
+    new_df=pd.concat([new_df,a],axis=0)
 
-
-
-
-
+print(new_df.info())
+new_df['duration']=new_df['Date']- new_df['previous_date']
+new_df['Duration']=new_df['duration'].astype(str).str.replace('days','')
+new_df['Duration']=pd.to_numeric(new_df['Duration'],errors='coerce')
+ADI = new_df.groupby('Product_Code').agg(ADI = ('Duration','mean')).reset_index()
+print(ADI)
 
 
 #Cross validation
