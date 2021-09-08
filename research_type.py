@@ -1,4 +1,3 @@
-
 import numpy as np
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -8,7 +7,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.datasets import fetch_openml
 import seaborn as sn
 from sklearn.preprocessing import StandardScaler
-
 
 from scipy.stats import norm, skew  # Import Norm and skew for some statistics
 from scipy import stats  # Import stats
@@ -31,30 +29,26 @@ def ordinalEncode_category(df, str):
     ordinalEncoder.fit(X)
     df[str] = pd.DataFrame(ordinalEncoder.transform(X))
 
-
-
-
-
-ordinalEncode_category(df, "Product_Code")
 ordinalEncode_category(df, "Warehouse")
+ordinalEncode_category(df, "Product_Category")
 
 # Since the "()" has been removed , Now i Will change the data type.
 df['Order_Demand'] = df['Order_Demand'].str.replace('(', "", regex=True)
 df['Order_Demand'] = df['Order_Demand'].str.replace(')', "", regex=True)
 df['Order_Demand'] = df['Order_Demand'].astype('int64')
 
-       
+
 def scale_module(df):
     standardScaler = preprocessing.StandardScaler()
     df_standard_scaled = standardScaler.fit_transform(df)
-    df_standard_scaled = pd.DataFrame(df_standard_scaled, columns = df.columns)
-       
+    df_standard_scaled = pd.DataFrame(df_standard_scaled, columns=df.columns)
 
-scale_module(df)
+
 print(df.head(10))
-y=df['Order_Demand']
-X=df.drop(['Order_Demand'],1)
-X_train, X_test,y_train,y_test = train_test_split(X,y,random_state=0)
+
+y = df['Order_Demand']
+X = df.drop(['Order_Demand'], 1)
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
 
 #Grouping demand to identify datewise sales
 demand_grouped = df.groupby(['Product_Code','Date']).agg(total_sale=('Order_Demand','sum')).reset_index()
@@ -63,7 +57,6 @@ cv_data = demand_grouped.groupby('Product_Code').agg(average=('total_sale','mean
 #calculating CV squared
 cv_data['cv_sqr']=(cv_data['sd']/cv_data['average'])**2
 print(cv_data.head(10))
-
 
 df['Date'] = df['Date'].astype('datetime64[ns]')
 
@@ -83,13 +76,11 @@ new_df['Duration']=pd.to_numeric(new_df['Duration'],errors='coerce')
 ADI = new_df.groupby('Product_Code').agg(ADI = ('Duration','mean')).reset_index()
 print(ADI)
 
-
-#Cross validation
 adi_cv=pd.merge(ADI,cv_data)
 print(adi_cv.head(10))
 
 #defining a function for categorization
-def demand_pattern(df):
+def category(df):
     a=0
 
     if((df['ADI']<=1.34) & (df['cv_sqr']<=0.49)):
@@ -103,8 +94,7 @@ def demand_pattern(df):
     return a
 
 #categorizing products based on their forcastability
-adi_cv['category']=adi_cv.apply(demand_pattern,axis=1)
+adi_cv['category']=adi_cv.apply(category,axis=1)
 
 #categorized list
 print(adi_cv.head())
-
