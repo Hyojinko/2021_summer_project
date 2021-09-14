@@ -1,13 +1,12 @@
 import numpy as np
 import pandas as pd
-from matplotlib import pyplot as plt
+import matplotlib.pyplot as plt
 from sklearn import linear_model
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import fetch_openml
-import seaborn as sn
+import seaborn as sns
 from sklearn.preprocessing import StandardScaler
-
 from scipy.stats import norm, skew  # Import Norm and skew for some statistics
 from scipy import stats  # Import stats
 import statsmodels.api as sm  # for decomposing the trends, seasonality etc.
@@ -38,6 +37,7 @@ df['Order_Demand'] = df['Order_Demand'].str.replace(')', "", regex=True)
 df['Order_Demand'] = df['Order_Demand'].astype('int64')
 
 
+
 def scale_module(df):
     standardScaler = preprocessing.StandardScaler()
     df_standard_scaled = standardScaler.fit_transform(df)
@@ -62,8 +62,10 @@ df['Date'] = df['Date'].astype('datetime64[ns]')
 
 prod_by_date=df.groupby(['Product_Code','Date']).agg(count=('Product_Code','count')).reset_index()
 skus=prod_by_date.Product_Code.value_counts()
+print("SKUS")
 print(skus)
 new_df= pd.DataFrame()
+
 for i in range(len(skus.index)):
     a= prod_by_date[prod_by_date['Product_Code']==skus.index[i]]
     a['previous_date']=a['Date'].shift(1)
@@ -95,6 +97,12 @@ def category(df):
 
 #categorizing products based on their forcastability
 adi_cv['category']=adi_cv.apply(category,axis=1)
-
+print(adi_cv.head(20))
 #categorized list
-print(adi_cv.head())
+print(adi_cv['category'].head())
+
+
+sns.scatterplot(x='cv_sqr',y='ADI',hue='category',data=adi_cv)
+plt.show()
+
+
